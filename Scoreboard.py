@@ -1,29 +1,38 @@
 from turtle import Turtle
-
 ALIGNMENT = "center"
-FONT = ("Sylvane", 24, 'bold')
-
-
-class scoreBoard(Turtle):
+FONT = ("Courier", 24, "normal")
+FILE_DIRECTORY = "data.txt"
+class Scoreboard(Turtle):
 
     def __init__(self):
         super().__init__()
+        high_score = open(FILE_DIRECTORY)
         self.score = 0
-        self.text = f"Score: {self.score} "
-        self.color('white')
+        self.high_score = int(high_score.read())
+        high_score.close()
+        self.color("white")
         self.penup()
-        self.goto(0, 260)
-        self.write(self.text, False, ALIGNMENT, FONT)
+        self.goto(0, 270)
         self.hideturtle()
+        self.update_scoreboard()
 
     def update_scoreboard(self):
-        self.write(f"Score :  {self.score}", align=ALIGNMENT, font=FONT)
+        self.clear()
+        self.write(f"Score: {self.score}  High Score: {self.high_score}", align=ALIGNMENT, font=FONT)
+
+    # def game_over(self):
+    #     self.clear()
+    #     self.goto(0, 0)
+    #     self.write("GAME OVER", align=ALIGNMENT, font=FONT)
 
     def increase_score(self):
-        self.clear()
         self.score += 1
         self.update_scoreboard()
 
-    def game_over(self):
-        self.goto(0, 0)
-        self.write(" Game Over ", align=ALIGNMENT, font=FONT)
+    def reset(self):
+        if self.score > self.high_score:
+            self.high_score = self.score
+            with open(FILE_DIRECTORY,mode="w") as file:
+                file.write(str(self.high_score))
+        self.score = 0
+        self.update_scoreboard()
